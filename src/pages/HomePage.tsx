@@ -155,11 +155,6 @@ const HomePage = () => {
         </Card>
       </section>
 
-      {/* Live Status */}
-      <section className="mb-5">
-        <LiveStatusDashboard />
-      </section>
-
       {/* Quick Actions */}
       <section className="grid grid-cols-2 gap-3">
         {[
