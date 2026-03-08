@@ -73,6 +73,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setIsOfflineMode((prev) => !prev);
   }, []);
 
+  const toggleDevTestMode = useCallback(() => {
+    setDevTestMode((prev) => !prev);
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
