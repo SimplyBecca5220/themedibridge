@@ -51,6 +51,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [savedAmount, setSavedAmount] = useState(0);
   const [readArticles, setReadArticles] = useState<Set<string>>(new Set());
   const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [devTestMode, setDevTestMode] = useState(false);
   const goal = 50000;
 
   const addTriageResult = useCallback((r: TriageResult) => {
