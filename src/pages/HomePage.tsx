@@ -74,7 +74,7 @@ const HomePage = () => {
   const { triageHistory, transactions, readArticles } = useAppState();
 
   const triageAccuracy = useAnimatedNumber(98);
-  const communitySavings = useAnimatedNumber(1240);
+  const communitySavings = useAnimatedNumber(1984000);
   const modulesCompleted = useAnimatedNumber(450);
 
   return (
