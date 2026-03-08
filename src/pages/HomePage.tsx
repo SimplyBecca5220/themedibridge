@@ -156,9 +156,8 @@ const HomePage = () => {
         </Card>
       </section>
 
-      {/* Logic Flow + Live Status */}
-      <section className="mb-5 space-y-4">
-        <LogicFlowDiagram />
+      {/* Live Status */}
+      <section className="mb-5">
         <LiveStatusDashboard />
       </section>
 
