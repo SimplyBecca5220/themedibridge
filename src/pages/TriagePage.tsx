@@ -157,7 +157,7 @@ const TriagePage = () => {
                   })()}
                   <Card className="bg-muted/50 p-2.5">
                     <p className="text-xs font-semibold text-foreground">Next Step:</p>
-                    <p className="text-xs text-muted-foreground">{msg.nextStep}</p>
+                    <p className="text-xs text-muted-foreground whitespace-pre-line">{msg.nextStep}</p>
                   </Card>
                   {msg.risk === "emergency" && (
                     <Button
