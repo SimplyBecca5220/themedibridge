@@ -161,7 +161,7 @@ const HomePage = () => {
           { icon: Stethoscope, label: "Symptom\nChecker", path: "/triage", color: "bg-primary/10 text-primary", stat: `${triageHistory.length} sessions` },
           { icon: PiggyBank, label: "Medical\nWallet", path: "/savings", color: "bg-success/10 text-success", stat: `${transactions.length} txns` },
           { icon: BookOpen, label: "Health\nGuides", path: "/education", color: "bg-warning/10 text-warning", stat: `${readArticles.size} read` },
-          { icon: FileText, label: "Export\nSnapshot", path: "/export", color: "bg-muted text-muted-foreground", stat: "Proof of work" },
+          { icon: FileText, label: "Export\nSnapshot", path: "/export", color: "bg-muted text-muted-foreground", stat: "Health summary" },
         ].map(({ icon: Icon, label, path, color, stat }) => (
           <Card
             key={path}
