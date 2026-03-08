@@ -17,10 +17,22 @@ export interface Transaction {
   timestamp: Date;
 }
 
+export interface ChatMessage {
+  role: "user" | "ai";
+  text: string;
+  risk?: RiskLevel;
+  nextStep?: string;
+  timestamp: Date;
+}
+
 interface AppState {
   // Triage
   triageHistory: TriageResult[];
   addTriageResult: (r: TriageResult) => void;
+  // Chat
+  chatMessages: ChatMessage[];
+  addChatMessage: (msg: ChatMessage) => void;
+  clearChat: () => void;
   // Savings
   transactions: Transaction[];
   savedAmount: number;
@@ -45,8 +57,15 @@ export const useAppState = () => {
   return ctx;
 };
 
+const WELCOME_MSG: ChatMessage = {
+  role: "ai",
+  text: "Hello! I'm your MediBridge health assistant. Describe your symptoms and I'll assess the urgency level.",
+  timestamp: new Date(),
+};
+
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [triageHistory, setTriageHistory] = useState<TriageResult[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([WELCOME_MSG]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [savedAmount, setSavedAmount] = useState(0);
   const [readArticles, setReadArticles] = useState<Set<string>>(new Set());
@@ -56,6 +75,14 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const addTriageResult = useCallback((r: TriageResult) => {
     setTriageHistory((prev) => [...prev, r]);
+  }, []);
+
+  const addChatMessage = useCallback((msg: ChatMessage) => {
+    setChatMessages((prev) => [...prev, msg]);
+  }, []);
+
+  const clearChat = useCallback(() => {
+    setChatMessages([{ ...WELCOME_MSG, timestamp: new Date() }]);
   }, []);
 
   const addTransaction = useCallback((amount: number) => {
@@ -81,6 +108,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     <AppContext.Provider
       value={{
         triageHistory, addTriageResult,
+        chatMessages, addChatMessage, clearChat,
         transactions, savedAmount, goal, addTransaction,
         readArticles, markArticleRead,
         isOfflineMode, toggleOfflineMode,

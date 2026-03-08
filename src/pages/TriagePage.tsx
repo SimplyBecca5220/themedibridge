@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, Bot, User, AlertTriangle, CheckCircle, AlertOctagon, Phone, Home } from "lucide-react";
-import { useAppState, RiskLevel } from "@/context/AppContext";
+import { Send, Bot, User, AlertTriangle, CheckCircle, AlertOctagon, Phone, Home, Trash2 } from "lucide-react";
+import { useAppState, RiskLevel, ChatMessage } from "@/context/AppContext";
 
 interface DecisionNode {
   risk: RiskLevel;
@@ -53,7 +53,7 @@ const decisionTree: Record<string, DecisionNode> = {
     text: "A sore throat is usually viral and resolves on its own. LOW RISK.",
     nextStep: "Gargle warm salt water, rest, and stay hydrated. See a doctor if it persists over a week.",
   },
-  "sweating": {
+  sweating: {
     risk: "emergency",
     text: "⚠️ Sweating combined with other symptoms may indicate a cardiac event. HIGH RISK.",
     nextStep: "Call 911/emergency services immediately.\n📍 Nearest Hospital: Lagos University Teaching Hospital — 6.5244°N, 3.3792°E",
@@ -72,13 +72,6 @@ function getTriageResponse(input: string): DecisionNode {
   };
 }
 
-interface Message {
-  role: "user" | "ai";
-  text: string;
-  risk?: RiskLevel;
-  nextStep?: string;
-}
-
 const riskConfig: Record<RiskLevel, { label: string; icon: typeof CheckCircle; className: string }> = {
   low: { label: "Low Risk", icon: CheckCircle, className: "risk-low" },
   moderate: { label: "Moderate Risk", icon: AlertTriangle, className: "risk-elevated" },
@@ -86,29 +79,32 @@ const riskConfig: Record<RiskLevel, { label: string; icon: typeof CheckCircle; c
 };
 
 const TriagePage = () => {
-  const { addTriageResult, isOfflineMode } = useAppState();
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "ai", text: "Hello! I'm your MediBridge health assistant. Describe your symptoms and I'll assess the urgency level." },
-  ]);
+  const { addTriageResult, chatMessages, addChatMessage, clearChat, isOfflineMode } = useAppState();
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, isTyping]);
+  }, [chatMessages, isTyping]);
 
   const handleSend = () => {
     if (!input.trim()) return;
-    const userMsg: Message = { role: "user", text: input.trim() };
-    setMessages((prev) => [...prev, userMsg]);
+    const userMsg: ChatMessage = { role: "user", text: input.trim(), timestamp: new Date() };
+    addChatMessage(userMsg);
     setInput("");
     setIsTyping(true);
 
     setTimeout(() => {
       const response = getTriageResponse(userMsg.text);
-      const aiMsg: Message = { role: "ai", text: response.text, risk: response.risk, nextStep: response.nextStep };
-      setMessages((prev) => [...prev, aiMsg]);
+      const aiMsg: ChatMessage = {
+        role: "ai",
+        text: response.text,
+        risk: response.risk,
+        nextStep: response.nextStep,
+        timestamp: new Date(),
+      };
+      addChatMessage(aiMsg);
       setIsTyping(false);
 
       addTriageResult({
@@ -125,14 +121,27 @@ const TriagePage = () => {
   return (
     <div className={`flex h-[calc(100dvh-4.5rem)] flex-col ${isOfflineMode ? "bg-background contrast-125" : ""}`}>
       {/* Header */}
-      <div className="border-b border-border bg-card px-4 py-3">
-        <h1 className="text-lg font-bold text-foreground">Symptom Checker</h1>
-        <p className="text-xs text-muted-foreground">AI-powered symptom assessment</p>
+      <div className="border-b border-border bg-card px-4 py-3 flex items-center justify-between">
+        <div>
+          <h1 className="text-lg font-bold text-foreground">Symptom Checker</h1>
+          <p className="text-xs text-muted-foreground">AI-powered symptom assessment</p>
+        </div>
+        {chatMessages.length > 1 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1.5 text-muted-foreground hover:text-destructive"
+            onClick={clearChat}
+          >
+            <Trash2 size={14} />
+            Clear
+          </Button>
+        )}
       </div>
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-        {messages.map((msg, i) => (
+        {chatMessages.map((msg, i) => (
           <div key={i} className={`flex gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
             <Avatar className="h-8 w-8 shrink-0">
               <AvatarFallback className={msg.role === "ai" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}>
@@ -142,6 +151,9 @@ const TriagePage = () => {
             <div className={`max-w-[80%] space-y-2 ${msg.role === "user" ? "items-end" : ""}`}>
               <Card className={`p-3 ${msg.role === "user" ? "bg-primary text-primary-foreground border-primary" : "bg-card"}`}>
                 <p className="text-sm leading-relaxed">{msg.text}</p>
+                <p className="text-[9px] opacity-50 mt-1">
+                  {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                </p>
               </Card>
               {msg.risk && (
                 <div className="space-y-1.5">
