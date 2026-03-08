@@ -127,7 +127,7 @@ const TriagePage = () => {
       {/* Header */}
       <div className="border-b border-border bg-card px-4 py-3">
         <h1 className="text-lg font-bold text-foreground">Symptom Checker</h1>
-        <p className="text-xs text-muted-foreground">JSON Decision Tree Engine · Proof of Logic</p>
+        <p className="text-xs text-muted-foreground">AI-powered symptom assessment</p>
       </div>
 
       {/* Messages */}
