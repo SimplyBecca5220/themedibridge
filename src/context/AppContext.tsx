@@ -32,6 +32,9 @@ interface AppState {
   // Connectivity
   isOfflineMode: boolean;
   toggleOfflineMode: () => void;
+  // Dev Test Mode
+  devTestMode: boolean;
+  toggleDevTestMode: () => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -48,6 +51,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [savedAmount, setSavedAmount] = useState(0);
   const [readArticles, setReadArticles] = useState<Set<string>>(new Set());
   const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [devTestMode, setDevTestMode] = useState(false);
   const goal = 50000;
 
   const addTriageResult = useCallback((r: TriageResult) => {
@@ -69,6 +73,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setIsOfflineMode((prev) => !prev);
   }, []);
 
+  const toggleDevTestMode = useCallback(() => {
+    setDevTestMode((prev) => !prev);
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
@@ -76,6 +84,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         transactions, savedAmount, goal, addTransaction,
         readArticles, markArticleRead,
         isOfflineMode, toggleOfflineMode,
+        devTestMode, toggleDevTestMode,
       }}
     >
       {children}

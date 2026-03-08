@@ -16,17 +16,17 @@ const decisionTree: Record<string, DecisionNode> = {
   "chest pain": {
     risk: "emergency",
     text: "⚠️ Chest pain can indicate a cardiac emergency. This is a HIGH RISK symptom.",
-    nextStep: "Call emergency services (911/112) immediately. Do NOT drive yourself.",
+    nextStep: "Call emergency services (911/112) immediately. Do NOT drive yourself.\n📍 Nearest Hospital: Lagos University Teaching Hospital — 6.5244°N, 3.3792°E",
   },
   "shortness of breath": {
     risk: "emergency",
     text: "⚠️ Shortness of breath requires urgent medical evaluation. HIGH RISK.",
-    nextStep: "Go to the nearest emergency room or call emergency services now.",
+    nextStep: "Go to the nearest emergency room or call emergency services now.\n📍 Nearest Hospital: Lagos University Teaching Hospital — 6.5244°N, 3.3792°E",
   },
   "breathing difficulty": {
     risk: "emergency",
     text: "⚠️ Difficulty breathing is a medical emergency. HIGH RISK.",
-    nextStep: "Call emergency services immediately. Stay calm and sit upright.",
+    nextStep: "Call emergency services immediately. Stay calm and sit upright.\n📍 Nearest Hospital: Lagos University Teaching Hospital — 6.5244°N, 3.3792°E",
   },
   fever: {
     risk: "moderate",
@@ -52,6 +52,11 @@ const decisionTree: Record<string, DecisionNode> = {
     risk: "low",
     text: "A sore throat is usually viral and resolves on its own. LOW RISK.",
     nextStep: "Gargle warm salt water, rest, and stay hydrated. See a doctor if it persists over a week.",
+  },
+  "sweating": {
+    risk: "emergency",
+    text: "⚠️ Sweating combined with other symptoms may indicate a cardiac event. HIGH RISK.",
+    nextStep: "Call 911/emergency services immediately.\n📍 Nearest Hospital: Lagos University Teaching Hospital — 6.5244°N, 3.3792°E",
   },
 };
 
@@ -152,7 +157,7 @@ const TriagePage = () => {
                   })()}
                   <Card className="bg-muted/50 p-2.5">
                     <p className="text-xs font-semibold text-foreground">Next Step:</p>
-                    <p className="text-xs text-muted-foreground">{msg.nextStep}</p>
+                    <p className="text-xs text-muted-foreground whitespace-pre-line">{msg.nextStep}</p>
                   </Card>
                   {msg.risk === "emergency" && (
                     <Button

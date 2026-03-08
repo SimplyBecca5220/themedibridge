@@ -6,11 +6,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
 import BottomNav from "./components/BottomNav";
 import SyncHeader from "./components/SyncHeader";
+import DevTestPanel from "./components/DevTestPanel";
 import HomePage from "./pages/HomePage";
 import TriagePage from "./pages/TriagePage";
 import SavingsPage from "./pages/SavingsPage";
 import EducationPage from "./pages/EducationPage";
 import ExportPage from "./pages/ExportPage";
+import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,9 +32,11 @@ const App = () => (
               <Route path="/savings" element={<SavingsPage />} />
               <Route path="/education" element={<EducationPage />} />
               <Route path="/export" element={<ExportPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
+          <DevTestPanel />
           <BottomNav />
         </AppProvider>
       </BrowserRouter>
