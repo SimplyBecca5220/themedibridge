@@ -1,6 +1,7 @@
 import { useAppState } from "@/context/AppContext";
-import { Wifi, WifiOff, Zap } from "lucide-react";
+import { Wifi, WifiOff, Zap, Database } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 
 const SyncHeader = () => {
   const { isOfflineMode, toggleOfflineMode } = useAppState();
@@ -19,6 +20,12 @@ const SyncHeader = () => {
             {isOfflineMode ? "High-contrast · Low bandwidth" : "All data up to date"}
           </p>
         </div>
+        {isOfflineMode && (
+          <Badge className="ml-1 gap-1 bg-success/10 text-success border-success/30 text-[10px]">
+            <Database size={10} />
+            Data Cached
+          </Badge>
+        )}
       </div>
       <div className="flex items-center gap-2">
         <Zap size={12} className="text-muted-foreground" />

@@ -1,4 +1,4 @@
-import { Home, Stethoscope, PiggyBank, BookOpen, FileText } from "lucide-react";
+import { Home, Stethoscope, PiggyBank, BookOpen, Settings } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const navItems = [
@@ -6,7 +6,7 @@ const navItems = [
   { path: "/triage", label: "Triage", icon: Stethoscope },
   { path: "/savings", label: "Wallet", icon: PiggyBank },
   { path: "/education", label: "Learn", icon: BookOpen },
-  { path: "/export", label: "Export", icon: FileText },
+  { path: "/settings", label: "Settings", icon: Settings },
 ];
 
 const BottomNav = () => {
