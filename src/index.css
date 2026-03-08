@@ -59,8 +59,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased text-[15px];
     font-family: 'Inter', system-ui, sans-serif;
+  }
+  button, a[role="button"], [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
