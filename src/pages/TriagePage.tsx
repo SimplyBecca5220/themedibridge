@@ -53,6 +53,11 @@ const decisionTree: Record<string, DecisionNode> = {
     text: "A sore throat is usually viral and resolves on its own. LOW RISK.",
     nextStep: "Gargle warm salt water, rest, and stay hydrated. See a doctor if it persists over a week.",
   },
+  "sweating": {
+    risk: "emergency",
+    text: "⚠️ Sweating combined with other symptoms may indicate a cardiac event. HIGH RISK.",
+    nextStep: "Call 911/emergency services immediately.\n📍 Nearest Hospital: Lagos University Teaching Hospital — 6.5244°N, 3.3792°E",
+  },
 };
 
 function getTriageResponse(input: string): DecisionNode {
