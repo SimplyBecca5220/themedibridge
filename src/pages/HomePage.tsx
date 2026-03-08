@@ -39,9 +39,9 @@ Generated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}
   Risk Levels:      Low / Moderate / Emergency
 
 ── COMMUNITY SAVINGS ────────────────
-  Total Saved:      $1,240 USD
+  Total Saved:      ₦1,984,000 NGN
   Active Wallets:   87 community members
-  Avg. Contribution: $14.25 per user
+  Avg. Contribution: ₦22,800 per user
   Goal Completion:  34% average progress
 
 ── DIGITAL LITERACY ─────────────────
@@ -74,7 +74,7 @@ const HomePage = () => {
   const { triageHistory, transactions, readArticles } = useAppState();
 
   const triageAccuracy = useAnimatedNumber(98);
-  const communitySavings = useAnimatedNumber(1240);
+  const communitySavings = useAnimatedNumber(1984000);
   const modulesCompleted = useAnimatedNumber(450);
 
   return (
@@ -127,9 +127,9 @@ const HomePage = () => {
                 <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-warning/10">
                   <Users size={18} className="text-warning" />
                 </div>
-                <p className="text-xl font-extrabold text-foreground">${communitySavings.toLocaleString()}</p>
+                <p className="text-lg font-extrabold text-foreground">₦{communitySavings.toLocaleString()}</p>
                 <p className="text-[10px] leading-tight text-muted-foreground">Community Savings</p>
-                <p className="text-[9px] text-muted-foreground/70">This month (USD)</p>
+                <p className="text-[9px] text-muted-foreground/70">This month (NGN)</p>
               </div>
 
               {/* Digital Literacy */}
