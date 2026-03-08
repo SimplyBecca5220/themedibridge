@@ -5,7 +5,7 @@ import { Shield, Stethoscope, PiggyBank, BookOpen, FileText, ArrowRight, Activit
 import { useAppState } from "@/context/AppContext";
 import { useEffect, useState } from "react";
 
-import LiveStatusDashboard from "@/components/LiveStatusDashboard";
+
 
 function useAnimatedNumber(target: number, duration = 1200) {
   const [value, setValue] = useState(0);
