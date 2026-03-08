@@ -107,7 +107,7 @@ const HomePage = () => {
             <CardTitle className="flex items-center gap-2 text-base">
               <Activity size={18} className="text-primary" />
               Impact Dashboard
-              <span className="ml-auto text-[10px] font-normal text-muted-foreground">Live · Simulated</span>
+              <span className="ml-auto text-[10px] font-normal text-muted-foreground">Live</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 pt-2">
