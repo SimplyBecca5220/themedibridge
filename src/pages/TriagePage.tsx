@@ -16,7 +16,7 @@ const decisionTree: Record<string, DecisionNode> = {
   "chest pain": {
     risk: "emergency",
     text: "⚠️ Chest pain can indicate a cardiac emergency. This is a HIGH RISK symptom.",
-    nextStep: "Call emergency services (911/112) immediately. Do NOT drive yourself.",
+    nextStep: "Call emergency services (911/112) immediately. Do NOT drive yourself.\n📍 Nearest Hospital: Lagos University Teaching Hospital — 6.5244°N, 3.3792°E",
   },
   "shortness of breath": {
     risk: "emergency",
