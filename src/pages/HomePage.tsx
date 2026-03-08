@@ -39,9 +39,9 @@ Generated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}
   Risk Levels:      Low / Moderate / Emergency
 
 ── COMMUNITY SAVINGS ────────────────
-  Total Saved:      $1,240 USD
+  Total Saved:      ₦1,984,000 NGN
   Active Wallets:   87 community members
-  Avg. Contribution: $14.25 per user
+  Avg. Contribution: ₦22,800 per user
   Goal Completion:  34% average progress
 
 ── DIGITAL LITERACY ─────────────────
