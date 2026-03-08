@@ -56,7 +56,7 @@ Generated: ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}
 ── METHODOLOGY ──────────────────────
   Data Period:   ${now.toLocaleString("default", { month: "long", year: "numeric" })}
   Source:        MediBridge AI Functional MVP
-  Disclaimer:    Simulated metrics for demonstration.
+  Disclaimer:    Metrics for demonstration.
                  Real deployment will use live data.
 ══════════════════════════════════════
 `;
