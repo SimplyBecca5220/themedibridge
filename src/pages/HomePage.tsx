@@ -87,9 +87,8 @@ const HomePage = () => {
         <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-foreground sm:text-4xl">
           MediBridge AI
         </h1>
-        <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-primary">Functional MVP</p>
-        <p className="mt-2 max-w-xs text-sm text-muted-foreground">
-          Healthcare triage, financial inclusion, and health literacy — with documented proof of work.
+        <p className="mt-3 max-w-xs text-sm text-muted-foreground">
+          Empowering Communities through AI-Driven Care and Financial Resilience.
         </p>
         <Button
           size="lg"
