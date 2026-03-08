@@ -3,9 +3,69 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, Bot, User, AlertTriangle, CheckCircle, AlertOctagon, Phone } from "lucide-react";
+import { Send, Bot, User, AlertTriangle, CheckCircle, AlertOctagon, Phone, Home } from "lucide-react";
+import { useAppState, RiskLevel } from "@/context/AppContext";
 
-type RiskLevel = "low" | "elevated" | "emergency";
+interface DecisionNode {
+  risk: RiskLevel;
+  text: string;
+  nextStep: string;
+}
+
+const decisionTree: Record<string, DecisionNode> = {
+  "chest pain": {
+    risk: "emergency",
+    text: "⚠️ Chest pain can indicate a cardiac emergency. This is a HIGH RISK symptom.",
+    nextStep: "Call emergency services (911/112) immediately. Do NOT drive yourself.",
+  },
+  "shortness of breath": {
+    risk: "emergency",
+    text: "⚠️ Shortness of breath requires urgent medical evaluation. HIGH RISK.",
+    nextStep: "Go to the nearest emergency room or call emergency services now.",
+  },
+  "breathing difficulty": {
+    risk: "emergency",
+    text: "⚠️ Difficulty breathing is a medical emergency. HIGH RISK.",
+    nextStep: "Call emergency services immediately. Stay calm and sit upright.",
+  },
+  fever: {
+    risk: "moderate",
+    text: "Fever may indicate an infection. This is a MODERATE RISK symptom.",
+    nextStep: "Take paracetamol as directed. Stay hydrated. Seek care if fever exceeds 39°C or lasts 48+ hours.",
+  },
+  cough: {
+    risk: "moderate",
+    text: "A persistent cough is a MODERATE RISK symptom that may need monitoring.",
+    nextStep: "Rest and drink warm fluids. See a doctor if it lasts over 2 weeks or produces blood.",
+  },
+  diarrhea: {
+    risk: "moderate",
+    text: "Diarrhea can cause dehydration. MODERATE RISK, especially for children and elderly.",
+    nextStep: "Use oral rehydration salts. Seek care if it lasts over 2 days or you see blood.",
+  },
+  headache: {
+    risk: "low",
+    text: "Headaches are common and usually not serious. LOW RISK.",
+    nextStep: "Stay hydrated and rest. Visit a clinic if pain worsens or persists beyond 3 days.",
+  },
+  "sore throat": {
+    risk: "low",
+    text: "A sore throat is usually viral and resolves on its own. LOW RISK.",
+    nextStep: "Gargle warm salt water, rest, and stay hydrated. See a doctor if it persists over a week.",
+  },
+};
+
+function getTriageResponse(input: string): DecisionNode {
+  const lower = input.toLowerCase();
+  for (const [keyword, node] of Object.entries(decisionTree)) {
+    if (lower.includes(keyword)) return node;
+  }
+  return {
+    risk: "low",
+    text: "I couldn't identify a specific condition. Please describe your symptoms in more detail.",
+    nextStep: "If you feel unwell, visit your nearest community health center for a check-up.",
+  };
+}
 
 interface Message {
   role: "user" | "ai";
@@ -14,60 +74,16 @@ interface Message {
   nextStep?: string;
 }
 
-const triageResponses: Record<string, { risk: RiskLevel; text: string; nextStep: string }> = {
-  headache: {
-    risk: "low",
-    text: "Headaches are common and usually not serious. Stay hydrated and rest.",
-    nextStep: "Monitor for 24 hours. Visit a clinic if pain worsens or persists beyond 3 days.",
-  },
-  fever: {
-    risk: "elevated",
-    text: "Fever may indicate an infection. Monitor your temperature closely.",
-    nextStep: "Take paracetamol as directed. Seek medical attention if fever exceeds 39°C or lasts more than 48 hours.",
-  },
-  "chest pain": {
-    risk: "emergency",
-    text: "Chest pain can be a sign of a serious cardiac event.",
-    nextStep: "Call emergency services (911/112) immediately. Do not drive yourself.",
-  },
-  cough: {
-    risk: "low",
-    text: "A cough is often viral and resolves on its own within 1-2 weeks.",
-    nextStep: "Rest, drink warm fluids. See a doctor if cough lasts over 2 weeks or produces blood.",
-  },
-  "breathing difficulty": {
-    risk: "emergency",
-    text: "Difficulty breathing requires urgent evaluation.",
-    nextStep: "Go to the nearest emergency room or call emergency services immediately.",
-  },
-  diarrhea: {
-    risk: "elevated",
-    text: "Diarrhea can lead to dehydration, especially in children and elderly.",
-    nextStep: "Use oral rehydration salts. Seek care if symptoms last over 2 days or you see blood.",
-  },
-};
-
-function getTriageResponse(input: string) {
-  const lower = input.toLowerCase();
-  for (const [keyword, response] of Object.entries(triageResponses)) {
-    if (lower.includes(keyword)) return response;
-  }
-  return {
-    risk: "low" as RiskLevel,
-    text: "I couldn't identify a specific condition. Please describe your symptoms in more detail.",
-    nextStep: "If you feel unwell, visit your nearest community health center for a check-up.",
-  };
-}
-
 const riskConfig: Record<RiskLevel, { label: string; icon: typeof CheckCircle; className: string }> = {
   low: { label: "Low Risk", icon: CheckCircle, className: "risk-low" },
-  elevated: { label: "Elevated Risk", icon: AlertTriangle, className: "risk-elevated" },
-  emergency: { label: "Emergency", icon: AlertOctagon, className: "risk-emergency" },
+  moderate: { label: "Moderate Risk", icon: AlertTriangle, className: "risk-elevated" },
+  emergency: { label: "EMERGENCY: High Risk", icon: AlertOctagon, className: "risk-emergency" },
 };
 
 const TriagePage = () => {
+  const { addTriageResult, isOfflineMode } = useAppState();
   const [messages, setMessages] = useState<Message[]>([
-    { role: "ai", text: "Hello! I'm your MediBridge health assistant. Describe your symptoms and I'll help assess the urgency." },
+    { role: "ai", text: "Hello! I'm your MediBridge health assistant. Describe your symptoms and I'll assess the urgency level." },
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -86,20 +102,27 @@ const TriagePage = () => {
 
     setTimeout(() => {
       const response = getTriageResponse(userMsg.text);
-      setMessages((prev) => [
-        ...prev,
-        { role: "ai", text: response.text, risk: response.risk, nextStep: response.nextStep },
-      ]);
+      const aiMsg: Message = { role: "ai", text: response.text, risk: response.risk, nextStep: response.nextStep };
+      setMessages((prev) => [...prev, aiMsg]);
       setIsTyping(false);
+
+      addTriageResult({
+        id: crypto.randomUUID(),
+        symptom: userMsg.text,
+        risk: response.risk,
+        advice: response.text,
+        nextStep: response.nextStep,
+        timestamp: new Date(),
+      });
     }, 1200);
   };
 
   return (
-    <div className="flex h-[calc(100dvh-4.5rem)] flex-col">
+    <div className={`flex h-[calc(100dvh-4.5rem)] flex-col ${isOfflineMode ? "bg-background contrast-125" : ""}`}>
       {/* Header */}
       <div className="border-b border-border bg-card px-4 py-3">
         <h1 className="text-lg font-bold text-foreground">Symptom Checker</h1>
-        <p className="text-xs text-muted-foreground">Powered by MediBridge AI</p>
+        <p className="text-xs text-muted-foreground">JSON Decision Tree Engine · Proof of Logic</p>
       </div>
 
       {/* Messages */}
@@ -121,7 +144,7 @@ const TriagePage = () => {
                     const config = riskConfig[msg.risk];
                     const Icon = config.icon;
                     return (
-                      <div className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${config.className}`}>
+                      <div className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${config.className} ${msg.risk === "emergency" ? "animate-pulse" : ""}`}>
                         <Icon size={14} />
                         {config.label}
                       </div>
@@ -131,14 +154,25 @@ const TriagePage = () => {
                     <p className="text-xs font-semibold text-foreground">Next Step:</p>
                     <p className="text-xs text-muted-foreground">{msg.nextStep}</p>
                   </Card>
-                  {msg.risk === "elevated" && (
+                  {msg.risk === "emergency" && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="mt-1 gap-1.5 rounded-xl animate-pulse"
+                      onClick={() => window.open("tel:911")}
+                    >
+                      <Phone size={14} />
+                      Call Nearest Clinic
+                    </Button>
+                  )}
+                  {msg.risk === "moderate" && (
                     <Button
                       variant="outline"
                       size="sm"
                       className="mt-1 gap-1.5 rounded-xl border-warning/30 text-warning hover:bg-warning/10 hover:text-warning"
                     >
-                      <Phone size={14} />
-                      Speak to a Local Volunteer
+                      <Home size={14} />
+                      Home Care Guide
                     </Button>
                   )}
                 </div>
@@ -164,10 +198,7 @@ const TriagePage = () => {
 
       {/* Input */}
       <div className="border-t border-border bg-card p-3">
-        <form
-          onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-          className="flex gap-2"
-        >
+        <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}

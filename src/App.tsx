@@ -3,11 +3,14 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppProvider } from "./context/AppContext";
 import BottomNav from "./components/BottomNav";
+import SyncHeader from "./components/SyncHeader";
 import HomePage from "./pages/HomePage";
 import TriagePage from "./pages/TriagePage";
 import SavingsPage from "./pages/SavingsPage";
 import EducationPage from "./pages/EducationPage";
+import ExportPage from "./pages/ExportPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,16 +21,20 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="mx-auto min-h-dvh max-w-lg">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/triage" element={<TriagePage />} />
-            <Route path="/savings" element={<SavingsPage />} />
-            <Route path="/education" element={<EducationPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-        <BottomNav />
+        <AppProvider>
+          <div className="mx-auto min-h-dvh max-w-lg">
+            <SyncHeader />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/triage" element={<TriagePage />} />
+              <Route path="/savings" element={<SavingsPage />} />
+              <Route path="/education" element={<EducationPage />} />
+              <Route path="/export" element={<ExportPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+          <BottomNav />
+        </AppProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
