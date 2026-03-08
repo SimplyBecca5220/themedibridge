@@ -32,6 +32,9 @@ interface AppState {
   // Connectivity
   isOfflineMode: boolean;
   toggleOfflineMode: () => void;
+  // Dev Test Mode
+  devTestMode: boolean;
+  toggleDevTestMode: () => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
