@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Stethoscope, PiggyBank, BookOpen, FileText, ArrowRight, Activity, Users, GraduationCap, Download } from "lucide-react";
 import { useAppState } from "@/context/AppContext";
 import { useEffect, useState } from "react";
+import LogicFlowDiagram from "@/components/LogicFlowDiagram";
+import LiveStatusDashboard from "@/components/LiveStatusDashboard";
 
 function useAnimatedNumber(target: number, duration = 1200) {
   const [value, setValue] = useState(0);
@@ -152,6 +154,12 @@ const HomePage = () => {
             </Button>
           </CardContent>
         </Card>
+      </section>
+
+      {/* Logic Flow + Live Status */}
+      <section className="mb-5 space-y-4">
+        <LogicFlowDiagram />
+        <LiveStatusDashboard />
       </section>
 
       {/* Quick Actions */}
