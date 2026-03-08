@@ -127,9 +127,9 @@ const HomePage = () => {
                 <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-warning/10">
                   <Users size={18} className="text-warning" />
                 </div>
-                <p className="text-xl font-extrabold text-foreground">${communitySavings.toLocaleString()}</p>
+                <p className="text-lg font-extrabold text-foreground">₦{communitySavings.toLocaleString()}</p>
                 <p className="text-[10px] leading-tight text-muted-foreground">Community Savings</p>
-                <p className="text-[9px] text-muted-foreground/70">This month (USD)</p>
+                <p className="text-[9px] text-muted-foreground/70">This month (NGN)</p>
               </div>
 
               {/* Digital Literacy */}
