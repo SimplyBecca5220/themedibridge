@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, Bot, User, AlertTriangle, CheckCircle, AlertOctagon } from "lucide-react";
+import { Send, Bot, User, AlertTriangle, CheckCircle, AlertOctagon, Phone } from "lucide-react";
 
 type RiskLevel = "low" | "elevated" | "emergency";
 
