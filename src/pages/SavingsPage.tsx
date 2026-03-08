@@ -1,21 +1,52 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { PiggyBank, Plus, Target, TrendingUp } from "lucide-react";
+import { PiggyBank, Plus, Target, TrendingUp, Coins } from "lucide-react";
+import confetti from "canvas-confetti";
 
 const SavingsPage = () => {
   const [goal] = useState(50000);
   const [saved, setSaved] = useState(12500);
   const [dailyInput, setDailyInput] = useState("");
+  const [bump, setBump] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const progress = Math.min((saved / goal) * 100, 100);
+
+  const fireConfetti = useCallback(() => {
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+    confetti({
+      particleCount: 40,
+      spread: 55,
+      startVelocity: 25,
+      origin: { x, y },
+      colors: ["#22C55E", "#0EA5E9", "#F59E0B", "#ffffff"],
+      ticks: 80,
+      scalar: 0.8,
+    });
+  }, []);
+
+  const addAmount = useCallback(
+    (amount: number) => {
+      if (amount <= 0 || saved >= goal) return;
+      setSaved((prev) => Math.min(prev + amount, goal));
+      setBump(true);
+      setTimeout(() => setBump(false), 400);
+      fireConfetti();
+    },
+    [saved, goal, fireConfetti]
+  );
 
   const handleContribute = () => {
     const amount = parseInt(dailyInput);
     if (amount > 0) {
-      setSaved((prev) => Math.min(prev + amount, goal));
+      addAmount(amount);
       setDailyInput("");
     }
   };
@@ -43,20 +74,41 @@ const SavingsPage = () => {
         <CardContent className="space-y-4">
           <div>
             <div className="mb-1.5 flex items-baseline justify-between">
-              <span className="text-2xl font-bold text-foreground">
+              <span
+                className={`text-2xl font-bold text-foreground transition-transform duration-300 ${
+                  bump ? "scale-110" : "scale-100"
+                }`}
+              >
                 ₦{saved.toLocaleString()}
               </span>
               <span className="text-sm text-muted-foreground">
                 of ₦{goal.toLocaleString()}
               </span>
             </div>
-            <Progress value={progress} className="h-3 rounded-full" />
+            <Progress value={progress} className="h-3 rounded-full [&>div]:transition-all [&>div]:duration-700 [&>div]:ease-out" />
             <p className="mt-1 text-xs text-muted-foreground">{progress.toFixed(1)}% complete</p>
           </div>
 
-          {/* Daily Contribution */}
+          {/* Quick Add */}
+          <div className="flex gap-2">
+            {[1, 5, 10].map((amt) => (
+              <Button
+                key={amt}
+                ref={amt === 1 ? buttonRef : undefined}
+                variant="outline"
+                size="sm"
+                className="flex-1 gap-1 rounded-xl border-success/30 font-semibold text-success hover:bg-success/10 hover:text-success active:scale-95 transition-transform"
+                onClick={() => addAmount(amt * 100)}
+              >
+                <Coins size={14} />
+                +₦{(amt * 100).toLocaleString()}
+              </Button>
+            ))}
+          </div>
+
+          {/* Custom Contribution */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Daily Contribution</label>
+            <label className="text-sm font-medium text-foreground">Custom Amount</label>
             <div className="flex gap-2">
               <Input
                 type="number"
