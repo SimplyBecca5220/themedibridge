@@ -21,7 +21,7 @@ const decisionTree: Record<string, DecisionNode> = {
   "shortness of breath": {
     risk: "emergency",
     text: "⚠️ Shortness of breath requires urgent medical evaluation. HIGH RISK.",
-    nextStep: "Go to the nearest emergency room or call emergency services now.",
+    nextStep: "Go to the nearest emergency room or call emergency services now.\n📍 Nearest Hospital: Lagos University Teaching Hospital — 6.5244°N, 3.3792°E",
   },
   "breathing difficulty": {
     risk: "emergency",
