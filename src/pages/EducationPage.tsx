@@ -27,11 +27,10 @@ const guides = [
 const EducationPage = () => {
   const [loading, setLoading] = useState(true);
 
-  // Simulate loading for skeleton demo
-  useState(() => {
+  useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
   return (
     <div className="safe-bottom px-4 py-6 space-y-5">
