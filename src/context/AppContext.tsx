@@ -84,6 +84,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         transactions, savedAmount, goal, addTransaction,
         readArticles, markArticleRead,
         isOfflineMode, toggleOfflineMode,
+        devTestMode, toggleDevTestMode,
       }}
     >
       {children}
