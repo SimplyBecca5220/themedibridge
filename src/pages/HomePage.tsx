@@ -184,20 +184,6 @@ const HomePage = () => {
         ))}
       </section>
 
-      {/* Status */}
-      <Card className="mt-5 border-primary/20 bg-primary/5">
-        <CardContent className="flex items-center gap-3 p-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
-            <Shield className="text-primary" size={20} />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-foreground">Offline-Ready MVP</p>
-            <p className="text-xs text-muted-foreground">
-              Toggle "Save Offline" in the header for high-contrast low-bandwidth mode.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
