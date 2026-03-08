@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Send, Bot, User, AlertTriangle, CheckCircle, AlertOctagon } from "lucide-react";
+import { Send, Bot, User, AlertTriangle, CheckCircle, AlertOctagon, Phone } from "lucide-react";
 
 type RiskLevel = "low" | "elevated" | "emergency";
 
@@ -131,6 +131,16 @@ const TriagePage = () => {
                     <p className="text-xs font-semibold text-foreground">Next Step:</p>
                     <p className="text-xs text-muted-foreground">{msg.nextStep}</p>
                   </Card>
+                  {msg.risk === "elevated" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-1 gap-1.5 rounded-xl border-warning/30 text-warning hover:bg-warning/10 hover:text-warning"
+                    >
+                      <Phone size={14} />
+                      Speak to a Local Volunteer
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
